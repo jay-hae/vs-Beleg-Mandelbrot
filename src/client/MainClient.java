@@ -1,68 +1,72 @@
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.*;
 import java.awt.Graphics2D;
 import java.awt.Graphics;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class MainClient extends JPanel implements MouseWheelListener{
 
+    static MainClient mainClient;
+
     List<BufferedImage> bufferedImages = new ArrayList<BufferedImage>();
 
-    int width = 800, height = 600;
+    int serverAmount = 0;
 
-    
-    //JLabel lbl = new JLabel();
+    int width = 800, height = 600;
 
     int zoom = 0;
 
     public static void main(String avg[]) throws IOException
     {
         JFrame frame = new JFrame();
-        MainClient abc=new MainClient(frame);
-        //abc.displayImage(ImageIO.read(new File("image.png")));
-        abc.bufferedImages.add(ImageIO.read(new File("image.png")));
-        abc.repaint();
-        frame.revalidate();
+        mainClient = new MainClient(frame);
+
+        frame.setResizable(false);
+        frame.add(mainClient);
+        frame.setVisible(true);
+        frame.pack();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addMouseWheelListener(mainClient);
+
+        // Proof of concept - Changing Model:
+
+        mainClient.bufferedImages.add(ImageIO.read(new File("imageOne.jpg")));
+        mainClient.bufferedImages.add(ImageIO.read(new File("imageTwo.png")));
+
+        // Present
+
+        mainClient.displayImage();
     }
 
     public MainClient(JFrame frame) throws IOException
     {
-        frame.setLayout(new FlowLayout());
-        frame.setSize(width, height);
-        frame.setResizable(false);
-        //frame.add(lbl);
-        frame.add(this);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.addMouseWheelListener(this);
+        this.setPreferredSize(new Dimension(width, height));
     }
 
-    public void displayImage(BufferedImage bufferedImage)
+    public void displayImage()
     {
-        //ImageIcon icon=new ImageIcon(bufferedImage);
-        //lbl.setIcon(icon);
+        mainClient.repaint();
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
         zoom -= e.getUnitsToScroll();
-        System.out.println(zoom);
+
+        // bufferedImages = getNewImages(); // Change model
+        displayImage(); // Present
     }
 
-    public BufferedImage[] getNewImages(int serverAmount)
+    public List<BufferedImage> getNewImages()
     {
         int segmentWidth = (width / serverAmount);
 
-        BufferedImage[] bufferedImages = new BufferedImage[serverAmount];
+        List<BufferedImage> bufferedImages = new ArrayList<BufferedImage>(serverAmount);
 
         for(int i = 0; i < serverAmount; i++)
         {
@@ -78,7 +82,7 @@ public class MainClient extends JPanel implements MouseWheelListener{
         {
             //wait for response
 
-
+            // bufferedImages.add(...)
         }
 
         return bufferedImages;
@@ -88,21 +92,10 @@ public class MainClient extends JPanel implements MouseWheelListener{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        try {
-            bufferedImages.set(0, ImageIO.read(new File("image.png")));
-        }
-        catch(IOException e)
-        {
-
-        }
-
         for(int i = 0; i < bufferedImages.size(); i++)
         {
-            System.out.println("draw");
-        g.drawOval(0, 0, getWidth(), getHeight());
-
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.drawImage(bufferedImages.get(i), 5, 10, this);
+            g2d.drawImage(bufferedImages.get(i), (width / bufferedImages.size()) * i, 0, this);
             g2d.dispose();
         }
     }
