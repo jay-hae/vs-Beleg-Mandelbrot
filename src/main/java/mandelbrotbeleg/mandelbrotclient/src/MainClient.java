@@ -59,7 +59,7 @@ public class MainClient extends JPanel implements MouseWheelListener{
         mainClient.repaint();
     }
 
-    /* Wird noch nicht getriggered*/
+    @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         zoom -= e.getUnitsToScroll();
 
