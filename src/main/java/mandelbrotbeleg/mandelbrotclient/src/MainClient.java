@@ -22,9 +22,11 @@ public class MainClient extends JPanel implements MouseWheelListener{
 
     List<BufferedImage> bufferedImages = new ArrayList<BufferedImage>();
 
-    int serverAmount = 0;
+    int serverAmount = 1;
 
-    int width = 800, height = 600;
+    int width = 800, height = 800;
+    int x = 5;
+    int y = 5;
 
     int zoom = 0;
 
@@ -39,13 +41,6 @@ public class MainClient extends JPanel implements MouseWheelListener{
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addMouseWheelListener(mainClient);
-
-        // Proof of concept - Changing Model:
-
-        System.out.println(new File("imageOne.jpg").getCanonicalPath());
-        mainClient.bufferedImages.add(ImageIO.read(new File("imageOne.jpg")));
-        mainClient.bufferedImages.add(ImageIO.read(new File("imageTwo.png")));
-
         mainClient.displayImage();
     }
 
@@ -61,18 +56,20 @@ public class MainClient extends JPanel implements MouseWheelListener{
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        zoom -= e.getUnitsToScroll();
 
+        zoom -= e.getUnitsToScroll();
         System.out.println(zoom);
-        // bufferedImages = getNewImages(); // Change model
+        bufferedImages = getNewImages();
         displayImage(); // Present
     }
+
+
 
     public List<BufferedImage> getNewImages()
     {
         int segmentWidth = (width / serverAmount);
 
-        List<BufferedImage> bufferedImages = new ArrayList<BufferedImage>(serverAmount);
+        List<BufferedImage> bufferedImages = new ArrayList<BufferedImage>();
 
         for(int i = 0; i < serverAmount; i++)
         {
@@ -92,7 +89,9 @@ public class MainClient extends JPanel implements MouseWheelListener{
             // anfgangs:  X Achse Koordiantenbereich in Bild Durch width   Beispiel  10/600
             // und dann je nach Zoom Faktor
 
-            // bufferedImages[i] = getImageSegment(zoom, leftPos, rightPos, topPos, bottomPos); // async
+            BufferedImage newImage = getImageSegment(segmentWidth,height,(((double)2*(double)x)/(double)width),-x,y);
+            bufferedImages.add(newImage);
+
         }
 
         for(int i = 0; i < serverAmount; i++)

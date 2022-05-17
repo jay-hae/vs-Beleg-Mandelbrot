@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Base64;
 
-@CrossOrigin(origins = "null")
 @RestController
 public class MandelbrotServerRestRessource {
 
@@ -35,11 +34,11 @@ public class MandelbrotServerRestRessource {
                 "originY: "+originY+"\n");
        try{
 
-           BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+           BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
            // hier können dann die Pixel verändert werden
 
            // https://stackoverflow.com/questions/4801366/convert-rgb-values-to-integer
-           //image.setRGB(3,4,);
+           // image.setRGB(0,0,4);
            // MandelBrotRechnerService.calc(xAktuellerPunkt,yAktuelleerPunkt) ->iterationen
 
            // convert BufferedImage to string
@@ -49,6 +48,7 @@ public class MandelbrotServerRestRessource {
            if(!res){return new HttpEntity<>("Fehler beim Bild lesen");}
 
            byte[] bytes = baos.toByteArray();
+           baos.close();
            return new HttpEntity<>(Base64.getEncoder().encodeToString(bytes));
 
        }catch(Exception e){
@@ -58,9 +58,7 @@ public class MandelbrotServerRestRessource {
 
     }
 
-
-
-        /*
+    /*
     // nur Test aufruf
     @GetMapping("/calcGet")
     String calcPixel2(){
