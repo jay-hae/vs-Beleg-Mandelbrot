@@ -148,6 +148,7 @@ public class MainClient extends JPanel implements MouseWheelListener{
             InputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(result));
             BufferedImage image = ImageIO.read(inputStream);
             if(image==null){throw new Exception();}
+            inputStream.close();
             return image;
 
         }catch (Exception e){

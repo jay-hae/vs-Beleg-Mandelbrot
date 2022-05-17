@@ -37,7 +37,10 @@ public class MandelbrotServerRestRessource {
 
            BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
            // hier können dann die Pixel verändert werden
-           //image.setRGB();
+
+           // https://stackoverflow.com/questions/4801366/convert-rgb-values-to-integer
+           //image.setRGB(3,4,);
+           // MandelBrotRechnerService.calc(xAktuellerPunkt,yAktuelleerPunkt) ->iterationen
 
            // convert BufferedImage to string
            ByteArrayOutputStream baos = new ByteArrayOutputStream();
