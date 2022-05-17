@@ -22,7 +22,7 @@ public class MainClient extends JPanel implements MouseWheelListener{
 
     List<BufferedImage> bufferedImages = new ArrayList<BufferedImage>();
 
-    int serverAmount = 1;
+    int serverAmount = 1; // width muss durch serveramount ganzzahlig teilbar sein !
 
     int width = 800, height = 800;
     int x = 5;
@@ -73,25 +73,9 @@ public class MainClient extends JPanel implements MouseWheelListener{
 
         for(int i = 0; i < serverAmount; i++)
         {
-            int leftPos = segmentWidth * i;
-            int rightPos = leftPos + segmentWidth;
-            int topPos = 0;
-            int bottomPos = height;
-
-            // Alio Notes:
-            // Pixel 1 linkes Segment:
-            // Startsitatuation Viewport Zentrum in Koordinaten Ursprung
-            // -> Pixel 1 Segment 1 durch Viewport Breite und Höhe ermitteln
-            // globale Variable trackt die Nutzerbewegung so dass Pixel 1 stets bekannt
-            // -> Pixel1 folgenden segment durch Pixel 1 erstes segment +segmentWidth*i
-
-            // scale:
-            // anfgangs:  X Achse Koordiantenbereich in Bild Durch width   Beispiel  10/600
-            // und dann je nach Zoom Faktor
-
-            BufferedImage newImage = getImageSegment(segmentWidth,height,(((double)2*(double)x)/(double)width),-x,y);
+            // TODO: Tracking von x,y und movement von Origin
+            BufferedImage newImage = getImageSegment(segmentWidth,height,(((double)2*(double)x)/(double)width),-x+segmentWidth*i,y);
             bufferedImages.add(newImage);
-
         }
 
         for(int i = 0; i < serverAmount; i++)
