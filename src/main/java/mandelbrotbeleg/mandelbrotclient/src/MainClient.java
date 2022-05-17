@@ -2,12 +2,14 @@ package main.java.mandelbrotbeleg.mandelbrotclient.src;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.awt.Graphics2D;
 import java.awt.Graphics;
@@ -103,6 +105,45 @@ public class MainClient extends JPanel implements MouseWheelListener{
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.drawImage(bufferedImages.get(i), (width / bufferedImages.size()) * i, 0, this);
             g2d.dispose();
+        }
+    }
+
+
+    // Beispiel für Anfrage von Client
+    // TODO: anständiges error handling
+    BufferedImage getImageSegment(int width, int height, double scale, double originX,double originY){
+
+        try{
+            String url = "http://localhost:8080/calcolino";
+            url+="/"+width;
+            url+="/"+height;
+            url+="/"+scale;
+            url+="/"+originX;
+            url+="/"+originY;
+
+            URL server = new URL(url);
+            URLConnection connection = server.openConnection();
+            HttpURLConnection http = (HttpURLConnection)connection;
+            http.setRequestMethod("GET");
+            http.setDoOutput(true);
+            http.connect();
+
+            // Recieve Http Reqeuest
+            BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream()));
+            String result="";
+            String line;
+            while((line = in.readLine()) != null){result+=line;}
+            in.close();
+
+            // Convert String back to image ...
+            InputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(result));
+            BufferedImage image = ImageIO.read(inputStream);
+            if(image==null){throw new Exception();}
+            return image;
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return new BufferedImage(13,13,BufferedImage.TYPE_CUSTOM); // müll
         }
     }
 
