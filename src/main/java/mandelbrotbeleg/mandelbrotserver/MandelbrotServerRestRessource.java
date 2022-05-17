@@ -1,4 +1,4 @@
-package mandelbrotbeleg.mandelbrotserver;
+package main.java.mandelbrotbeleg.mandelbrotserver;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
@@ -85,6 +85,12 @@ public class MandelbrotServerRestRessource {
                 "originX: "+originX+"\n"+
                 "originY: "+originY+"\n");
        try{
+
+           BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+           // hier können dann die Pixel verändert werden
+           //image.setRGB();
+
+           /// alles hier ziwshcen weg und eigentliche image erstellung Mandelbrot
            // test image
            BufferedImage testImage = ImageIO.read(new File("imageTwo.png"));
 
@@ -98,6 +104,7 @@ public class MandelbrotServerRestRessource {
            if(!res){
                return new HttpEntity<>("Fehler beim Bild lesen");
            }
+           //  weg weg weg
 
            byte[] bytes = baos.toByteArray();
            return new HttpEntity<>(Base64.getEncoder().encodeToString(bytes));
