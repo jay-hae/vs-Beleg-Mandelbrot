@@ -63,7 +63,7 @@ public class MainClient extends JPanel implements MouseWheelListener{
     public void mouseWheelMoved(MouseWheelEvent e) {
         zoom -= e.getUnitsToScroll();
 
-        System.out.println(e.getWheelRotation());
+        System.out.println(zoom);
         // bufferedImages = getNewImages(); // Change model
         displayImage(); // Present
     }

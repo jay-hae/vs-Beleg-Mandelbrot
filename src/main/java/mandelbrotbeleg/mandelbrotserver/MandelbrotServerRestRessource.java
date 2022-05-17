@@ -5,16 +5,59 @@ import org.springframework.web.bind.annotation.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Base64;
 
 @CrossOrigin(origins = "null")
 @RestController
 public class MandelbrotServerRestRessource {
 
+    /*
+    * width: segment Width
+    * height: segment Height
+    * scale: pixel abstand in Zahlenebene
+    * originX: X Koordinate Ursprung Segment / Pixel1 in Zahlenebene
+    * originY: Y koordinate Ursprung in Segment / Pixel1 in Zahlenebene
+    * Returns: Als String codiertes BufferedImage, TeilSegment des Mandelbrot sets
+    * */
+    @GetMapping("/calcolino/{width}/{height}/{scale}/{originX}/{originY}")
+    HttpEntity<String> getImageSegment(
+            @PathVariable int width,
+            @PathVariable int height,
+            @PathVariable Double scale,
+            @PathVariable Double originX,
+            @PathVariable Double originY) {
 
+        System.out.println("Server got Request with:\n" +
+                "width: "+width+"\n"+
+                "height: "+height+"\n"+
+                "scale: "+scale+"\n"+
+                "originX: "+originX+"\n"+
+                "originY: "+originY+"\n");
+       try{
+
+           BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+           // hier können dann die Pixel verändert werden
+           //image.setRGB();
+
+           // convert BufferedImage to string
+           ByteArrayOutputStream baos = new ByteArrayOutputStream();
+           boolean res = ImageIO.write(image, "png", baos);
+
+           if(!res){return new HttpEntity<>("Fehler beim Bild lesen");}
+
+           byte[] bytes = baos.toByteArray();
+           return new HttpEntity<>(Base64.getEncoder().encodeToString(bytes));
+
+       }catch(Exception e){
+            System.out.println("Exception");
+       }
+        return new HttpEntity<>("Server had Error");
+
+    }
+
+
+
+        /*
     // nur Test aufruf
     @GetMapping("/calcGet")
     String calcPixel2(){
@@ -23,8 +66,6 @@ public class MandelbrotServerRestRessource {
         try{
 
             // Beispiel für Anfrage von Client
-            /* Send Http Request
-             Werte einsetzen*/
             URL server = new URL("http://localhost:8080/calcolino/600/600/2/0/0");
             URLConnection connection = server.openConnection();
             HttpURLConnection http = (HttpURLConnection)connection;
@@ -58,62 +99,6 @@ public class MandelbrotServerRestRessource {
             System.out.println(e.getMessage());
         }
         return "none";
-    }
-
-
-
-
-    /*
-    * width: segment Width
-    * height: segment Height
-    * scale: pixel abstand in Zahlenebene
-    * originX: X Koordinate Ursprung Segment / Pixel1 in Zahlenebene
-    * originY: Y koordinate Ursprung in Segment / Pixel1 in Zahlenebene
-    * */
-    @GetMapping("/calcolino/{width}/{height}/{scale}/{originX}/{originY}")
-    HttpEntity<String> getImageSegment(
-            @PathVariable int width,
-            @PathVariable int height,
-            @PathVariable Double scale,
-            @PathVariable Double originX,
-            @PathVariable Double originY) {
-
-        System.out.println("Server got Request with:\n" +
-                "width: "+width+"\n"+
-                "height: "+height+"\n"+
-                "scale: "+scale+"\n"+
-                "originX: "+originX+"\n"+
-                "originY: "+originY+"\n");
-       try{
-
-           BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-           // hier können dann die Pixel verändert werden
-           //image.setRGB();
-
-           /// alles hier ziwshcen weg und eigentliche image erstellung Mandelbrot
-           // test image
-           BufferedImage testImage = ImageIO.read(new File("imageTwo.png"));
-
-           // convert BufferedImage to string
-           ByteArrayOutputStream baos = new ByteArrayOutputStream();
-           boolean res = ImageIO.write(testImage, "png", baos);
-
-           //baos.close();
-           System.out.println("size: "+baos.size());
-
-           if(!res){
-               return new HttpEntity<>("Fehler beim Bild lesen");
-           }
-           //  weg weg weg
-
-           byte[] bytes = baos.toByteArray();
-           return new HttpEntity<>(Base64.getEncoder().encodeToString(bytes));
-
-       }catch(Exception e){
-            System.out.println("Exception");
-       }
-        return new HttpEntity<>("Server had Error");
-
-    }
+    } */
 
 }
