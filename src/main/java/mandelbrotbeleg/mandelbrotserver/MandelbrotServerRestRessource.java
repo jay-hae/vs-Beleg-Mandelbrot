@@ -60,6 +60,9 @@ public class MandelbrotServerRestRessource {
         return "none";
     }
 
+
+
+
     /*
     * width: segment Width
     * height: segment Height
@@ -68,7 +71,7 @@ public class MandelbrotServerRestRessource {
     * originY: Y koordinate Ursprung in Segment / Pixel1 in Zahlenebene
     * */
     @GetMapping("/calcolino/{width}/{height}/{scale}/{originX}/{originY}")
-    HttpEntity<String> calcGet(
+    HttpEntity<String> getImageSegment(
             @PathVariable int width,
             @PathVariable int height,
             @PathVariable Double scale,
