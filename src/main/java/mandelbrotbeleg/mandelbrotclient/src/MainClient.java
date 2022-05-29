@@ -29,6 +29,7 @@ public class MainClient extends JPanel implements MouseWheelListener{
     int width = 800, height = 800;
     double x = 5;
     double y = 5;
+    double zoomFactor=0.9;
 
     boolean _isLoading = false; // aktuell nur mit einem Server
     // bei n servern braucht es ein Array
@@ -70,8 +71,14 @@ public class MainClient extends JPanel implements MouseWheelListener{
 
         // noch position des scrollevents bestimmen und skalierten offset aufrechnen
         // sinnvollen zoom, x kann hier noch negativ werden
-        x= x-zoom*0.01;
-        y= y-zoom*0.01;
+
+        if(zoom>0){
+            x*=zoomFactor;
+            y*=zoomFactor;
+        }else{
+            x/=zoomFactor;
+            y/=zoomFactor;
+        }
         System.out.println(x);
         System.out.println(y);
         bufferedImages = getNewImages();
