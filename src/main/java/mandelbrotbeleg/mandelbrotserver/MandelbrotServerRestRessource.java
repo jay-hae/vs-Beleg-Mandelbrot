@@ -34,12 +34,8 @@ public class MandelbrotServerRestRessource {
                 "originY: "+originY+"\n");
        try{
 
-           BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
-           // hier können dann die Pixel verändert werden
-
-           // https://stackoverflow.com/questions/4801366/convert-rgb-values-to-integer
-           // image.setRGB(0,0,4);
-           // MandelBrotRechnerService.calc(xAktuellerPunkt,yAktuelleerPunkt) ->iterationen
+           // Calc Image
+           BufferedImage image = MandelBrotRechnerService.calc(width,height,scale,originX,originY);
 
            // convert BufferedImage to string
            ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -57,49 +53,4 @@ public class MandelbrotServerRestRessource {
         return new HttpEntity<>("Server had Error");
 
     }
-
-    /*
-    // nur Test aufruf
-    @GetMapping("/calcGet")
-    String calcPixel2(){
-
-        System.out.println("Get request made");
-        try{
-
-            // Beispiel für Anfrage von Client
-            URL server = new URL("http://localhost:8080/calcolino/600/600/2/0/0");
-            URLConnection connection = server.openConnection();
-            HttpURLConnection http = (HttpURLConnection)connection;
-            http.setRequestMethod("GET");
-            http.setDoOutput(true);
-            http.connect();
-
-            // Recieve Http Reqeuest
-            BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream()));
-            String result="";
-            String line;
-            while((line = in.readLine()) != null){
-                result+=line;
-            }
-            in.close();
-
-            // Convert String back to image ...
-            InputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(result));
-            BufferedImage image = ImageIO.read(inputStream);
-            if(image==null){
-                return "image was null";
-            }
-
-            // test save  auf client unrelevant
-            ImageIO.write(image, "png", new File("imageTwo.png"));
-
-            return result;
-
-        }catch (Exception e){
-
-            System.out.println(e.getMessage());
-        }
-        return "none";
-    } */
-
 }

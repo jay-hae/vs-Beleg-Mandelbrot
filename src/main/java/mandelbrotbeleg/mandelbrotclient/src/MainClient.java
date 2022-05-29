@@ -24,11 +24,16 @@ public class MainClient extends JPanel implements MouseWheelListener{
 
     int serverAmount = 1; // width muss durch serveramount ganzzahlig teilbar sein !
 
-    int width = 800, height = 800;
-    int x = 5;
-    int y = 5;
 
-    int zoom = 0;
+    // Start Mapping bei Zoom=0
+    int width = 800, height = 800;
+    double x = 5;
+    double y = 5;
+
+    boolean _isLoading = false; // aktuell nur mit einem Server
+    // bei n servern braucht es ein Array
+
+    double zoom = 0;
 
     public static void main(String avg[]) throws IOException
     {
@@ -57,8 +62,18 @@ public class MainClient extends JPanel implements MouseWheelListener{
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
 
+
+        if(_isLoading){return;}
+
         zoom -= e.getUnitsToScroll();
         System.out.println(zoom);
+
+        // noch position des scrollevents bestimmen und skalierten offset aufrechnen
+        // sinnvollen zoom, x kann hier noch negativ werden
+        x= x-zoom*0.01;
+        y= y-zoom*0.01;
+        System.out.println(x);
+        System.out.println(y);
         bufferedImages = getNewImages();
         displayImage(); // Present
     }
@@ -67,6 +82,9 @@ public class MainClient extends JPanel implements MouseWheelListener{
 
     public List<BufferedImage> getNewImages()
     {
+
+        _isLoading = true;
+
         int segmentWidth = (width / serverAmount);
 
         List<BufferedImage> bufferedImages = new ArrayList<BufferedImage>();
@@ -74,7 +92,12 @@ public class MainClient extends JPanel implements MouseWheelListener{
         for(int i = 0; i < serverAmount; i++)
         {
             // TODO: Tracking von x,y und movement von Origin
-            BufferedImage newImage = getImageSegment(segmentWidth,height,(((double)2*(double)x)/(double)width),-x+segmentWidth*i,y);
+            BufferedImage newImage = getImageSegment(
+                    segmentWidth,
+                    height,
+                    ((2.0*(double)x)/(double)width), // scale
+                    -x+segmentWidth*i,
+                    y);
             bufferedImages.add(newImage);
         }
 
@@ -105,6 +128,7 @@ public class MainClient extends JPanel implements MouseWheelListener{
     // TODO: anständiges error handling
     BufferedImage getImageSegment(int width, int height, double scale, double originX,double originY){
 
+        System.out.println(" enter get Imge Segment");
         try{
             String url = "http://localhost:8080/calcolino";
             url+="/"+width;
@@ -132,12 +156,16 @@ public class MainClient extends JPanel implements MouseWheelListener{
             BufferedImage image = ImageIO.read(inputStream);
             if(image==null){throw new Exception();}
             inputStream.close();
+
+            _isLoading = false;
             return image;
 
         }catch (Exception e){
             System.out.println(e.getMessage());
+            _isLoading = false;
             return new BufferedImage(13,13,BufferedImage.TYPE_CUSTOM); // müll
         }
+
     }
 
 }
