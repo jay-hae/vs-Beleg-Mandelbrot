@@ -16,7 +16,12 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 
+
+// idefix port größer 1024
 public class MainClient extends JPanel implements MouseWheelListener{
+
+
+    /* Da boolen _isLoading primitiver Datentyp im Callback keine Referenz -> Workaround*/
 
     static MainClient mainClient;
 
@@ -24,15 +29,15 @@ public class MainClient extends JPanel implements MouseWheelListener{
 
     int serverAmount = 1; // width muss durch serveramount ganzzahlig teilbar sein !
 
-
     // Start Mapping bei Zoom=0
     int width = 800, height = 800;
+
+    // BigDecimal als Koordinaten Dattentyp sinnvoll
     double x = 5;
     double y = 5;
     double zoomFactor=0.9;
 
-    boolean _isLoading = false; // aktuell nur mit einem Server
-    // bei n servern braucht es ein Array
+    boolean _isLoading=false;
 
     double zoom = 0;
 
@@ -60,13 +65,21 @@ public class MainClient extends JPanel implements MouseWheelListener{
         mainClient.repaint();
     }
 
+
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
 
+        int diff = e.getUnitsToScroll();
 
-        if(_isLoading){return;}
+        if(_isLoading==true){
+            System.out.println("blocked zoom, still loading");
+            return;
+        }
 
-        zoom -= e.getUnitsToScroll();
+        // guard funktioniert nicht,
+        // verstehe nicht warum zoom angepasst wird aber isLoading stets falsch bleibt
+
+        zoom -= diff;
         System.out.println(zoom);
 
         // noch position des scrollevents bestimmen und skalierten offset aufrechnen
@@ -81,16 +94,17 @@ public class MainClient extends JPanel implements MouseWheelListener{
         }
         System.out.println(x);
         System.out.println(y);
+
+        // muss in thread ausgelagert werden
         bufferedImages = getNewImages();
         displayImage(); // Present
+        // muss in thread ausgelagert werden
     }
 
 
 
     public List<BufferedImage> getNewImages()
     {
-
-        _isLoading = true;
 
         int segmentWidth = (width / serverAmount);
 
@@ -135,7 +149,8 @@ public class MainClient extends JPanel implements MouseWheelListener{
     // TODO: anständiges error handling
     BufferedImage getImageSegment(int width, int height, double scale, double originX,double originY){
 
-        System.out.println(" enter get Imge Segment");
+        System.out.println(" enter get Image Segment"+_isLoading);
+        _isLoading=true;
         try{
             String url = "http://localhost:8080/calcolino";
             url+="/"+width;
@@ -165,6 +180,7 @@ public class MainClient extends JPanel implements MouseWheelListener{
             inputStream.close();
 
             _isLoading = false;
+            System.out.println("return from get Image Segment");
             return image;
 
         }catch (Exception e){

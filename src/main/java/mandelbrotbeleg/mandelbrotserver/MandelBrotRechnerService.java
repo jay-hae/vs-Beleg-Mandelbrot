@@ -75,6 +75,8 @@ public class MandelBrotRechnerService {
         return iter;
     }
 
+
+    // Schöner wenn stetige übergänge
     static Integer farbwert(int iter) {
 
         int[] F = new int[3];
