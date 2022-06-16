@@ -85,6 +85,7 @@ public class MandelBrotRechnerService {
         int[] F = new int[3];
         for (int i = 1; i < farben.length - 1; i++) {
             if (iter < farben[i][0]) {
+
                 int iterationsInterval = farben[i - 1][0] - farben[i][0];
                 double gewichtetesMittel = (iter - farben[i][0]) / (double) iterationsInterval;
 
@@ -95,6 +96,7 @@ public class MandelBrotRechnerService {
                 return new Color(F[0], F[1], F[2]).getRGB();
             }
         }
+
         return Color.BLACK.getRGB();
     }
 
