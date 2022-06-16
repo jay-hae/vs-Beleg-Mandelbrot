@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 
 
 // idefix port größer 1024 zum testen
-public class MainClient extends JPanel implements MouseWheelListener{
+public class MainClient extends JPanel {
 
 
     /* Da boolen _isLoading primitiver Datentyp im Callback keine Referenz -> Workaround*/
@@ -35,7 +35,7 @@ public class MainClient extends JPanel implements MouseWheelListener{
     // BigDecimal als Koordinaten Dattentyp sinnvoll
     double x = 5;
     double y = 5;
-    double zoomFactor=0.9;
+    double zoomFactor=0.99;
 
     boolean _isLoading=false;
 
@@ -51,9 +51,8 @@ public class MainClient extends JPanel implements MouseWheelListener{
         frame.setVisible(true);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.addMouseWheelListener(mainClient);
         
-        mainClient.getAndDisplayImages();
+        mainClient.zoomAnimation();
     }
 
     public MainClient(JFrame frame) throws IOException
@@ -61,9 +60,29 @@ public class MainClient extends JPanel implements MouseWheelListener{
         this.setPreferredSize(new Dimension(width, height));
     }
 
+    public void zoomAnimation()
+    {
+        while(true)
+        {
+            getAndDisplayImages();
+
+            x*=zoomFactor;
+            y*=zoomFactor;
+
+            try
+            {
+                Thread.sleep(100);
+            }
+            catch(InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void getAndDisplayImages()
     {
-        bufferedImages = mainClient.getNewImages();
+        bufferedImages = getNewImages();
         displayImage();
     }
 
@@ -71,46 +90,6 @@ public class MainClient extends JPanel implements MouseWheelListener{
     {
         mainClient.repaint();
     }
-
-    // obsolet
-    // TODO: zoom an einen Punkt im Bild automatisch zum vergleich
-    // Eventuell nach drücken von start button
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-
-        int diff = e.getUnitsToScroll();
-
-        if(_isLoading==true){
-            System.out.println("blocked zoom, still loading");
-            return;
-        }
-
-        // guard funktioniert nicht,
-        // verstehe nicht warum zoom angepasst wird aber isLoading stets falsch bleibt
-
-        zoom -= diff;
-        System.out.println(zoom);
-
-        // noch position des scrollevents bestimmen und skalierten offset aufrechnen
-        // sinnvollen zoom, x kann hier noch negativ werden
-
-        if(zoom>0){
-            x*=zoomFactor;
-            y*=zoomFactor;
-        }else{
-            x/=zoomFactor;
-            y/=zoomFactor;
-        }
-        System.out.println(x);
-        System.out.println(y);
-
-        // muss in thread ausgelagert werden
-        bufferedImages = getNewImages();
-        displayImage(); // Present
-        // muss in thread ausgelagert werden
-    }
-
-
 
     // TODO: möglichkeit an mehrere Server zu senden
     // obwohl vlt. unnötig da nicht gefordert
