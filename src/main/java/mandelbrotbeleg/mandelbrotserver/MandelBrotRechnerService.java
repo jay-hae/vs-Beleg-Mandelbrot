@@ -32,12 +32,9 @@ public class MandelBrotRechnerService {
 
         // width und height müssen auf die Threads noch auf geteilt werden
         // height wird so gelassen und width wird durch anzah an threads geteielt
-        int heightT = height;
-        int widthT  = width / anzThreads;
 
         for(int i=0;i<anzThreads;i++){
-            Double originXT= originX + widthT * scale; // da bildschirm in streifen geteilt und dann originX pro streifen weiter gestellt werden muss
-            workerThreads[i].updateThread(widthT, heightT, scale, originXT, originY, buffImage);
+            workerThreads[i].updateThread(width, height, scale, originX, originY, buffImage);
 
             threads[i] = new Thread(workerThreads[i]);
             threads[i].start();

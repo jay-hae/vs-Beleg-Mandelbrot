@@ -10,8 +10,6 @@ import java.util.Base64;
 @RestController
 public class MandelbrotServerRestRessource {
 
-    MandelBrotRechnerService service = new MandelBrotRechnerService();
-
     /*
     * width: segment Width
     * height: segment Height
@@ -37,6 +35,7 @@ public class MandelbrotServerRestRessource {
        try{
 
            // Calc Image
+           MandelBrotRechnerService service = new MandelBrotRechnerService();
            BufferedImage image = service.calc(width,height,scale,originX,originY);
 
            // convert BufferedImage to string

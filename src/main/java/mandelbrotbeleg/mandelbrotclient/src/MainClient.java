@@ -19,18 +19,8 @@ public class MainClient extends JPanel {
             "http://localhost:8080",
             "http://localhost:8080",
             "http://localhost:8080",
-
             "http://localhost:8080",
-            "http://localhost:8080",
-            "http://localhost:8080",
-
-            "http://localhost:8080",
-            "http://localhost:8080",
-            "http://localhost:8080",
-
-            "http://localhost:8080",
-            "http://localhost:8080",
-            "http://localhost:8080",
+          
     };
     static Thread[] threads = new Thread[servers.length];
     static ServerRequestRunner[] workers = new ServerRequestRunner[servers.length];
@@ -79,7 +69,7 @@ public class MainClient extends JPanel {
 
             try
             {
-                Thread.sleep(1000);
+                Thread.sleep(1);
             }
             catch(InterruptedException e)
             {
