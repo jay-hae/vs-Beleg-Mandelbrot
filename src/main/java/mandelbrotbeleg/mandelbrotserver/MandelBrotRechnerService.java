@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 public class MandelBrotRechnerService {
 
-    static int maxIter = 5000;
+    static int maxIter = 1000;
     static double maxBetrag = 35;
 
     static final int[][] farben = {
