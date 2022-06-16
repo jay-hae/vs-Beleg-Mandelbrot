@@ -33,8 +33,12 @@ public class MainClient extends JPanel {
     int width = 800, height = 800;
 
     // BigDecimal als Koordinaten Dattentyp sinnvoll
-    double x = 5;
-    double y = 5;
+    double topLeftPositionX = 5;
+    double topLeftPositionY = 5;
+
+    double originPositionX = -0.743643887037151;
+    double originPositionY = 0.131825904205330;
+
     double zoomFactor=0.99;
 
     boolean _isLoading=false;
@@ -66,8 +70,8 @@ public class MainClient extends JPanel {
         {
             getAndDisplayImages();
 
-            x*=zoomFactor;
-            y*=zoomFactor;
+            topLeftPositionX*=zoomFactor;
+            topLeftPositionY*=zoomFactor;
 
             try
             {
@@ -107,9 +111,9 @@ public class MainClient extends JPanel {
             BufferedImage newImage = getImageSegment(
                     segmentWidth,
                     height,
-                    ((2.0*(double)x)/(double)width), // scale
-                    -x+segmentWidth*i,
-                    y);
+                    ((2.0*(double)topLeftPositionX)/(double)width), // scale
+                    -topLeftPositionX+segmentWidth*i+(originPositionX),
+                    topLeftPositionY+(originPositionY));
             bufferedImages.add(newImage);
         }
 
