@@ -6,13 +6,15 @@ import java.awt.image.BufferedImage;
 
 public class MandelBrotRechnerService {
     static int anzThreads = 10; //TODO variabel an übergebenes rechteck anpassen
-    static MandelbrotWorkerThreads[] workerThreads;
-    static BufferedImage buffImage;
-    static Thread[] threads;
+
+    MandelbrotWorkerThreads[] workerThreads;
+    BufferedImage buffImage;
+    Thread[] threads;
 
     public MandelBrotRechnerService(){
         // wenn anzThreads dynamisch ..
         // aufruf von Threads:
+        threads = new Thread[anzThreads];
         workerThreads = new MandelbrotWorkerThreads[anzThreads];
 
         for(int i=0;i<anzThreads;i++){

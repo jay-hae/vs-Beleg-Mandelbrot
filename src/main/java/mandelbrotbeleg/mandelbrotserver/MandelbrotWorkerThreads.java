@@ -52,12 +52,12 @@ public class MandelbrotWorkerThreads implements Runnable{
             for(int j=0;j<height;j++){
                 currentPixelY = this.originY - j * scale;
                 int iter = calcIter(currentPixelX,currentPixelY);
-                buffImage.setRGB(i, j, MandelbrotWorkerThreads.farbwert(iter));
+                buffImage.setRGB(i, j, farbwert(iter));
             }
         }
     }
 
-    public int calcIter(double cr, double ci) {
+    int calcIter(double cr, double ci) {
 
         int iter=0;
         double zr=0;
@@ -82,7 +82,7 @@ public class MandelbrotWorkerThreads implements Runnable{
         return iter;
     }
 
-    static Integer farbwert(int iter) {
+    Integer farbwert(int iter) {
 
         int[] F = new int[3];
         for (int i = 1; i < farben.length - 1; i++) {
