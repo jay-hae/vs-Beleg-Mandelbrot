@@ -6,9 +6,12 @@ import java.awt.image.BufferedImage;
 
 
 public class MandelBrotRechnerService {
-
+    static int anzThreads = 10; //TODO variabel an übergebenes rechteck anpassen
     static int maxIter = 1000;
     static double maxBetrag = 35;
+    static MandelbrotWorkerThreads[] workerThreads;
+    static BufferedImage buffImage;
+    static Thread[] Threads;
 
     static final int[][] farben = {
             {1, 255, 255, 255}, // Hohe Iterationszahlen sollen hell,
@@ -23,16 +26,35 @@ public class MandelBrotRechnerService {
     }; // Der Apfelmann wird schwarz.
 
 
-    public MandelBrotRechnerService(){}
-
+    public MandelBrotRechnerService(int width, int height){
+        // wenn anzThreads dynamisch ..
+        // aufruf von Threads:
+        workerThreads = new MandelbrotWorkerThreads[anzThreads];
+        for(int i=0;i<anzThreads;i++){
+            workerThreads[i] = new MandelbrotWorkerThreads(anzThreads,i);
+        }
+    } 
 
     // TODO: Multithreading wenn genug Pixel übergeben werden
     // dynamische anpassung an server -> ermittlung Cors -> so viele Threads wenn sich der Overhead lohnt
     static BufferedImage calc(int width,int height,Double scale,Double originX,Double originY){
 
         System.out.println("enter calc with "+" "+width+" "+height+" "+scale+" "+originX+" "+originY);
-        BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
 
+        buffImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+
+        // width und height müssen auf die Threads noch auf geteilt werden
+        // height wird so gelassen und width wird durch anzah an threads geteielt
+        int heightT = height;
+        int widthT  = width / anzThreads;
+        Double originYT= originY;
+
+        for(int i=0;i<anzThreads;i++){
+            Double originXT= originX + widthT; // da bildschirm in streifn geteilt und dann originX pro striefen weiter gestellt werden muss
+            workerThreads[i].updateThread(widthT, heightT, scale, originX, originY, buffImage);
+            workerThreads[i].start();
+        }
+        /*
         Double currentPixelX;
         Double currentPixelY;
 
@@ -47,11 +69,12 @@ public class MandelBrotRechnerService {
                 image.setRGB(i, j, farbwert(iter));
             }
         }
-
-
         return image;
+        */
     }
 
+    /*
+    // Jetzt in MandelbrotWorkerThreads
     static public int calcIter(double cr, double ci) {
 
         int iter=0;
@@ -77,8 +100,9 @@ public class MandelBrotRechnerService {
 
         return iter;
     }
+    */
 
-
+    /*
     // TODO: stetige Farbwerte Funktion schreiben
     static Integer farbwert(int iter) {
 
@@ -97,6 +121,7 @@ public class MandelBrotRechnerService {
         }
         return Color.BLACK.getRGB();
     }
+    */
 
 
     // Getter setter
