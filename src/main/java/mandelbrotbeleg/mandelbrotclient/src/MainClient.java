@@ -19,8 +19,15 @@ public class MainClient extends JPanel {
             "http://localhost:8080",
             "http://localhost:8080",
             "http://localhost:8080",
+
             "http://localhost:8080",
             "http://localhost:8080",
+            "http://localhost:8080",
+
+            "http://localhost:8080",
+            "http://localhost:8080",
+            "http://localhost:8080",
+
             "http://localhost:8080",
             "http://localhost:8080",
             "http://localhost:8080",
@@ -28,7 +35,7 @@ public class MainClient extends JPanel {
     static Thread[] threads = new Thread[servers.length];
     static ServerRequestRunner[] workers = new ServerRequestRunner[servers.length];
 
-    List<BufferedImage> bufferedImages = new ArrayList<BufferedImage>();
+    BufferedImage[] bufferedImages = new BufferedImage[servers.length];
 
     // Start Mapping bei Zoom=0
     int width = 800, height = 800;
@@ -72,7 +79,7 @@ public class MainClient extends JPanel {
 
             try
             {
-                Thread.sleep(100);
+                Thread.sleep(1);
             }
             catch(InterruptedException e)
             {
@@ -97,8 +104,6 @@ public class MainClient extends JPanel {
     // alternativ könnte auch der eine Server die anderen Server verwalten, Schnittstelle bleibt gleich
     public void getNewImages()
     {
-        bufferedImages.clear();
-
         double scale = ((2.0*(double)topLeftPositionX)/(double)width);
         double segmentWidthInCoordinateSystem = (width / servers.length) * scale;
         int segmentWidth = width/servers.length;
@@ -127,7 +132,7 @@ public class MainClient extends JPanel {
         {
             try{
                 threads[i].join();
-                bufferedImages.add(workers[i].image);
+                bufferedImages[i] = workers[i].image;
 
             }catch(Exception e){
                 System.out.println("Error join !");
@@ -140,10 +145,10 @@ public class MainClient extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for(int i = 0; i < bufferedImages.size(); i++)
+        for(int i = 0; i < bufferedImages.length; i++)
         {
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.drawImage(bufferedImages.get(i), (width / bufferedImages.size()) * i, 0, this);
+            g2d.drawImage(bufferedImages[i], (width / bufferedImages.length) * i, 0, this);
             g2d.dispose();
         }
     }
