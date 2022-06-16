@@ -10,6 +10,8 @@ import java.util.Base64;
 @RestController
 public class MandelbrotServerRestRessource {
 
+    MandelBrotRechnerService service = new MandelBrotRechnerService();
+
     /*
     * width: segment Width
     * height: segment Height
@@ -35,7 +37,7 @@ public class MandelbrotServerRestRessource {
        try{
 
            // Calc Image
-           BufferedImage image = MandelBrotRechnerService.calc(width,height,scale,originX,originY);
+           BufferedImage image = service.calc(width,height,scale,originX,originY);
 
            // convert BufferedImage to string
            ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -48,7 +50,8 @@ public class MandelbrotServerRestRessource {
            return new HttpEntity<>(Base64.getEncoder().encodeToString(bytes));
 
        }catch(Exception e){
-            System.out.println("Exception");
+            e.printStackTrace();
+            System.err.println("Exception");
        }
         return new HttpEntity<>("Server had Error");
 

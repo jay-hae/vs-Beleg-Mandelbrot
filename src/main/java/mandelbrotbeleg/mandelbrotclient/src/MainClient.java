@@ -79,7 +79,7 @@ public class MainClient extends JPanel {
 
             try
             {
-                Thread.sleep(1);
+                Thread.sleep(1000);
             }
             catch(InterruptedException e)
             {

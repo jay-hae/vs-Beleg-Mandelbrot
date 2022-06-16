@@ -10,7 +10,7 @@ public class MandelBrotRechnerService {
     static BufferedImage buffImage;
     static Thread[] threads;
 
-    public MandelBrotRechnerService(int width, int height){
+    public MandelBrotRechnerService(){
         // wenn anzThreads dynamisch ..
         // aufruf von Threads:
         workerThreads = new MandelbrotWorkerThreads[anzThreads];
@@ -22,7 +22,7 @@ public class MandelBrotRechnerService {
 
     // TODO: Multithreading wenn genug Pixel übergeben werden
     // dynamische anpassung an server -> ermittlung Cors -> so viele Threads wenn sich der Overhead lohnt
-    static BufferedImage calc(int width,int height,Double scale,Double originX,Double originY){
+    BufferedImage calc(int width,int height,Double scale,Double originX,Double originY){
 
         System.out.println("enter calc with "+" "+width+" "+height+" "+scale+" "+originX+" "+originY);
 
@@ -34,9 +34,10 @@ public class MandelBrotRechnerService {
         int widthT  = width / anzThreads;
 
         for(int i=0;i<anzThreads;i++){
-            threads[i] = new Thread(workerThreads[i]);
             Double originXT= originX + widthT * scale; // da bildschirm in streifen geteilt und dann originX pro streifen weiter gestellt werden muss
             workerThreads[i].updateThread(widthT, heightT, scale, originXT, originY, buffImage);
+
+            threads[i] = new Thread(workerThreads[i]);
             threads[i].start();
         }
 
