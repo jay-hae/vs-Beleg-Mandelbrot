@@ -1,4 +1,4 @@
-package main.java.mandelbrotbeleg.mandelbrotserver;
+package main.java.mandelbrotbeleg.mandelbrotclient.src;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -14,22 +14,21 @@ import java.util.Base64;
 public class ServerRequestRunner implements Runnable {
 
 
-    BufferedImage image;
-    int height;
-    int width;
-    double scale;
-    double originX;
-    double originY;
-    String serverName;
+    public BufferedImage image;
+    final int height;
+    final int width;
+    final double scale;
+    final double originX;
+    final double originY;
+    final String serverName;
 
     public ServerRequestRunner(
-            BufferedImage image,
-            int height, int width,
+            int width,
+            int height,
             double scale,
             double originX,
             double originY,
             String serverName) {
-        this.image = image;
         this.height = height;
         this.width = width;
         this.scale = scale;
@@ -84,7 +83,6 @@ public class ServerRequestRunner implements Runnable {
             if(image==null){throw new Exception();}
             inputStream.close();
 
-            System.out.println("return from get Image Segment");
             return image;
 
         }catch (Exception e){

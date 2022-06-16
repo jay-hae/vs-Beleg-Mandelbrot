@@ -1,7 +1,5 @@
 package main.java.mandelbrotbeleg.mandelbrotclient.src;
 
-import main.java.mandelbrotbeleg.mandelbrotserver.ServerRequestRunner;
-
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -19,9 +17,16 @@ public class MainClient extends JPanel {
     static MainClient mainClient;
     static final String[] servers = {
             "http://localhost:8080",
+            "http://localhost:8080",
+            "http://localhost:8080",
+            "http://localhost:8080",
+            "http://localhost:8080",
+            "http://localhost:8080",
+            "http://localhost:8080",
+            "http://localhost:8080",
     };
     static Thread[] threads = new Thread[servers.length];
-
+    static ServerRequestRunner[] workers = new ServerRequestRunner[servers.length];
 
     List<BufferedImage> bufferedImages = new ArrayList<BufferedImage>();
 
@@ -62,8 +67,8 @@ public class MainClient extends JPanel {
         {
             getAndDisplayImages();
 
-            topLeftPositionX*=zoomFactor;
-            topLeftPositionY*=zoomFactor;
+            topLeftPositionX *= zoomFactor;
+            topLeftPositionY *= zoomFactor;
 
             try
             {
@@ -78,7 +83,7 @@ public class MainClient extends JPanel {
 
     public void getAndDisplayImages()
     {
-        bufferedImages = getNewImages();
+        getNewImages();
         displayImage();
     }
 
@@ -90,40 +95,45 @@ public class MainClient extends JPanel {
     // TODO: möglichkeit an mehrere Server zu senden
     // obwohl vlt. unnötig da nicht gefordert
     // alternativ könnte auch der eine Server die anderen Server verwalten, Schnittstelle bleibt gleich
-    public List<BufferedImage> getNewImages()
+    public void getNewImages()
     {
+        bufferedImages.clear();
 
-        int segmentWidth = (width / servers.length);
-
-        BufferedImage images[] = new BufferedImage[servers.length]; // TODO: change if server change
-
+        double scale = ((2.0*(double)topLeftPositionX)/(double)width);
+        double segmentWidthInCoordinateSystem = (width / servers.length) * scale;
+        int segmentWidth = width/servers.length;
+        
         for(int i = 0; i < servers.length; i++)
         {
 
-            ServerRequestRunner requestRunner = new ServerRequestRunner(
-                    images[i],
+            double leftTopPosX = -topLeftPositionX + segmentWidthInCoordinateSystem * i + (originPositionX);
+            double leftTopPosY = topLeftPositionY+(originPositionY);
+            System.out.println("origin: "+leftTopPosX+" "+leftTopPosX+" "+segmentWidthInCoordinateSystem);
+            workers[i] = new ServerRequestRunner(
                     segmentWidth,
                     height,
-                    ((2.0*(double)topLeftPositionX)/(double)width), // scale
-                    -topLeftPositionX+segmentWidth*i+(originPositionX),
-                    topLeftPositionY+(originPositionY),
+                    scale, // scale
+                    leftTopPosX,
+                    leftTopPosY,
                     servers[i]);
 
-            threads[i] = new Thread(requestRunner);
+            threads[i] = new Thread(workers[i]);
             threads[i].start();
 
         }
+        System.out.println("\n");
 
         for(int i = 0; i < servers.length; i++)
         {
             try{
                 threads[i].join();
+                bufferedImages.add(workers[i].image);
+
             }catch(Exception e){
                 System.out.println("Error join !");
             }
         }
 
-        return bufferedImages;
     }
 
     @Override
@@ -137,26 +147,4 @@ public class MainClient extends JPanel {
             g2d.dispose();
         }
     }
-
-/*
-            ServerRequestRunner requestRunner = new ServerRequestRunner(
-                    images[i],
-                    segmentWidth,
-                    height,
-<<<<<<< HEAD
-                    ((2.0*(double)x)/(double)width),
-                    -x+segmentWidth*i,
-                    y,
-                    servers[i]);
-
-            threads[i] = new Thread(requestRunner);
-            threads[i].start();
-
-=======
-                    ((2.0*(double)topLeftPositionX)/(double)width), // scale
-                    -topLeftPositionX+segmentWidth*i+(originPositionX),
-                    topLeftPositionY+(originPositionY));
-            bufferedImages.add(newImage);
->>>>>>> c5a86fe18acdf11479a8012d64b367a22813e66d
-* */
 }
