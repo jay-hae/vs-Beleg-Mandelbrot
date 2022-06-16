@@ -11,7 +11,7 @@
     <groupId>mandelbrotBeleg</groupId>
     <artifactId>mandelbrotServer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mandelbrotServer</name>son
+    <name>mandelbrotServer</name>
     <description>mandelbrotServer</description>
     <properties>
         <java.version>17</java.version>
