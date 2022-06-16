@@ -138,7 +138,7 @@ public class MainClient extends JPanel {
 
     // Beispiel für Anfrage von Client
     // TODO: anständiges error handling
-    BufferedImage getImageSegment(int width, int height, double scale, double originX,double originY){
+    BufferedImage getImageSegment(int width, int height, double scale, double topLeftPositionX,double topLeftPositionY){
 
         System.out.println(" enter get Image Segment"+_isLoading);
         _isLoading=true;
@@ -147,8 +147,8 @@ public class MainClient extends JPanel {
             url+="/"+width;
             url+="/"+height;
             url+="/"+scale;
-            url+="/"+originX;
-            url+="/"+originY;
+            url+="/"+topLeftPositionX;
+            url+="/"+topLeftPositionY;
 
             URL server = new URL(url);
             URLConnection connection = server.openConnection();
