@@ -25,6 +25,9 @@ public class MandelBrotRechnerService {
 
     public MandelBrotRechnerService(){}
 
+
+    // TODO: Multithreading wenn genug Pixel übergeben werden
+    // dynamische anpassung an server -> ermittlung Cors -> so viele Threads wenn sich der Overhead lohnt
     static BufferedImage calc(int width,int height,Double scale,Double originX,Double originY){
 
         System.out.println("enter calc with "+" "+width+" "+height+" "+scale+" "+originX+" "+originY);
@@ -76,7 +79,7 @@ public class MandelBrotRechnerService {
     }
 
 
-    // Schöner wenn stetige übergänge
+    // TODO: stetige Farbwerte Funktion schreiben
     static Integer farbwert(int iter) {
 
         int[] F = new int[3];

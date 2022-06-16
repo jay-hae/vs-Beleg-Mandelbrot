@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 
 
-// idefix port größer 1024
+// idefix port größer 1024 zum testen
 public class MainClient extends JPanel implements MouseWheelListener{
 
 
@@ -66,6 +66,9 @@ public class MainClient extends JPanel implements MouseWheelListener{
     }
 
 
+    // obsolet
+    // TODO: zoom an einen Punkt im Bild automatisch zum vergleich
+    // Eventuell nach drücken von start button
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
 
@@ -103,6 +106,9 @@ public class MainClient extends JPanel implements MouseWheelListener{
 
 
 
+    // TODO: möglichkeit an mehrere Server zu senden
+    // obwohl vlt. unnötig da nicht gefordert
+    // alternativ könnte auch der eine Server die anderen Server verwalten, Schnittstelle bleibt gleich
     public List<BufferedImage> getNewImages()
     {
 
@@ -112,7 +118,7 @@ public class MainClient extends JPanel implements MouseWheelListener{
 
         for(int i = 0; i < serverAmount; i++)
         {
-            // TODO: Tracking von x,y und movement von Origin
+            // TODO: Tracking von x,y und movement von Origin  //Obsolet nun gleicher Punkt
             BufferedImage newImage = getImageSegment(
                     segmentWidth,
                     height,
