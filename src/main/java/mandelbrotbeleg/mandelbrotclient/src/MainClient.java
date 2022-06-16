@@ -29,8 +29,12 @@ public class MainClient extends JPanel {
     int width = 800, height = 800;
 
     // BigDecimal als Koordinaten Dattentyp sinnvoll
-    double x = 5;
-    double y = 5;
+    double topLeftPositionX = 5;
+    double topLeftPositionY = 5;
+
+    double originPositionX = -0.743643887037151;
+    double originPositionY = 0.131825904205330;
+
     double zoomFactor=0.99;
 
     public static void main(String avg[]) throws IOException
@@ -58,8 +62,8 @@ public class MainClient extends JPanel {
         {
             getAndDisplayImages();
 
-            x*=zoomFactor;
-            y*=zoomFactor;
+            topLeftPositionX*=zoomFactor;
+            topLeftPositionY*=zoomFactor;
 
             try
             {
@@ -100,9 +104,9 @@ public class MainClient extends JPanel {
                     images[i],
                     segmentWidth,
                     height,
-                    ((2.0*(double)x)/(double)width),
-                    -x+segmentWidth*i,
-                    y,
+                    ((2.0*(double)topLeftPositionX)/(double)width), // scale
+                    -topLeftPositionX+segmentWidth*i+(originPositionX),
+                    topLeftPositionY+(originPositionY),
                     servers[i]);
 
             threads[i] = new Thread(requestRunner);
@@ -134,5 +138,25 @@ public class MainClient extends JPanel {
         }
     }
 
+/*
+            ServerRequestRunner requestRunner = new ServerRequestRunner(
+                    images[i],
+                    segmentWidth,
+                    height,
+<<<<<<< HEAD
+                    ((2.0*(double)x)/(double)width),
+                    -x+segmentWidth*i,
+                    y,
+                    servers[i]);
 
+            threads[i] = new Thread(requestRunner);
+            threads[i].start();
+
+=======
+                    ((2.0*(double)topLeftPositionX)/(double)width), // scale
+                    -topLeftPositionX+segmentWidth*i+(originPositionX),
+                    topLeftPositionY+(originPositionY));
+            bufferedImages.add(newImage);
+>>>>>>> c5a86fe18acdf11479a8012d64b367a22813e66d
+* */
 }
