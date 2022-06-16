@@ -52,7 +52,8 @@ public class MainClient extends JPanel implements MouseWheelListener{
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addMouseWheelListener(mainClient);
-        mainClient.displayImage();
+        
+        mainClient.getAndDisplayImages();
     }
 
     public MainClient(JFrame frame) throws IOException
@@ -60,11 +61,16 @@ public class MainClient extends JPanel implements MouseWheelListener{
         this.setPreferredSize(new Dimension(width, height));
     }
 
+    public void getAndDisplayImages()
+    {
+        bufferedImages = mainClient.getNewImages();
+        displayImage();
+    }
+
     public void displayImage()
     {
         mainClient.repaint();
     }
-
 
     // obsolet
     // TODO: zoom an einen Punkt im Bild automatisch zum vergleich
