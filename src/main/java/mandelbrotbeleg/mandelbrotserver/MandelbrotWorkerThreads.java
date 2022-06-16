@@ -1,4 +1,25 @@
+package main.java.mandelbrotbeleg.mandelbrotserver;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 public class MandelbrotWorkerThreads implements Runnable{
+
+    static int maxIter = 1000;
+    static double maxBetrag = 35;
+
+    static final int[][] farben = {
+            { 1, 255, 255, 255 }, // Hohe Iterationszahlen sollen hell,
+            { 30, 10, 255, 40 }, //
+            { 300, 10, 10, 40 }, // die etwas niedrigeren dunkel,
+            { 500, 205, 60, 40 }, // die "Spiralen" rot
+            { 850, 120, 140, 255 }, // und die "Arme" hellblau werden.
+            { 1000, 50, 30, 255 }, // Innen kommt ein dunkleres Blau,
+            { 1100, 0, 255, 0 }, // dann grelles Grün
+            { 1997, 20, 70, 20 }, // und ein dunkleres Grün.
+            { maxIter, 0, 0, 0 }
+    }; // Der Apfelmann wird schwarz.
+
     int anzThreads; 
     int currentThread;
     int width, height;
@@ -11,7 +32,7 @@ public class MandelbrotWorkerThreads implements Runnable{
         this.currentThread = curr;
     }
 
-    public updateThread(int width,int height,Double scale,Double originX,Double originY, BufferedImage buffImage){
+    public void updateThread(int width,int height,Double scale,Double originX,Double originY, BufferedImage buffImage){
         this.width = width;
         this.height = height;
         this.scale = scale;
@@ -19,7 +40,6 @@ public class MandelbrotWorkerThreads implements Runnable{
         this.originY = originY;
         this.buffImage = buffImage;
     }
-
 
     public void run(){
         Double currentPixelX;
@@ -31,13 +51,13 @@ public class MandelbrotWorkerThreads implements Runnable{
 
             for(int j=0;j<height;j++){
                 currentPixelY = this.originY - j * scale;
-                int iter = MandelbrotWorkerThreads.calcIter(currentPixelX,currentPixelY);
+                int iter = calcIter(currentPixelX,currentPixelY);
                 buffImage.setRGB(i, j, MandelbrotWorkerThreads.farbwert(iter));
             }
         }
     }
 
-    static public int calcIter(double cr, double ci) {
+    public int calcIter(double cr, double ci) {
 
         int iter=0;
         double zr=0;

@@ -1,35 +1,20 @@
 package main.java.mandelbrotbeleg.mandelbrotserver;
 
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
 public class MandelBrotRechnerService {
     static int anzThreads = 10; //TODO variabel an übergebenes rechteck anpassen
-    static int maxIter = 1000;
-    static double maxBetrag = 35;
     static MandelbrotWorkerThreads[] workerThreads;
     static BufferedImage buffImage;
-    static Thread[] Threads;
-
-    static final int[][] farben = {
-            {1, 255, 255, 255}, // Hohe Iterationszahlen sollen hell,
-            {30, 10, 255, 40}, //
-            {300, 10, 10, 40}, // die etwas niedrigeren dunkel,
-            {500, 205, 60, 40}, // die "Spiralen" rot
-            {850, 120, 140, 255}, // und die "Arme" hellblau werden.
-            {1000, 50, 30, 255}, // Innen kommt ein dunkleres Blau,
-            {1100, 0, 255, 0}, // dann grelles Grün
-            {1997, 20, 70, 20}, // und ein dunkleres Grün.
-            {maxIter, 0, 0, 0}
-    }; // Der Apfelmann wird schwarz.
-
+    static Thread[] threads;
 
     public MandelBrotRechnerService(int width, int height){
         // wenn anzThreads dynamisch ..
         // aufruf von Threads:
         workerThreads = new MandelbrotWorkerThreads[anzThreads];
+
         for(int i=0;i<anzThreads;i++){
             workerThreads[i] = new MandelbrotWorkerThreads(anzThreads,i);
         }
@@ -47,30 +32,27 @@ public class MandelBrotRechnerService {
         // height wird so gelassen und width wird durch anzah an threads geteielt
         int heightT = height;
         int widthT  = width / anzThreads;
-        Double originYT= originY;
 
         for(int i=0;i<anzThreads;i++){
-            Double originXT= originX + widthT; // da bildschirm in streifn geteilt und dann originX pro striefen weiter gestellt werden muss
-            workerThreads[i].updateThread(widthT, heightT, scale, originX, originY, buffImage);
-            workerThreads[i].start();
+            threads[i] = new Thread(workerThreads[i]);
+            Double originXT= originX + widthT * scale; // da bildschirm in streifen geteilt und dann originX pro streifen weiter gestellt werden muss
+            workerThreads[i].updateThread(widthT, heightT, scale, originXT, originY, buffImage);
+            threads[i].start();
         }
-        /*
-        Double currentPixelX;
-        Double currentPixelY;
 
-        for(int i=0; i<width; i++){
-
-            currentPixelX = originX + i * scale;
-
-            for(int j=0;j<height;j++){
-
-                currentPixelY = originY - j * scale;
-                int iter = MandelBrotRechnerService.calcIter(currentPixelX,currentPixelY);
-                image.setRGB(i, j, farbwert(iter));
+        for(int i = 0; i < anzThreads; i++)
+        {
+            try
+            {
+                threads[i].join();
+            }
+            catch(InterruptedException e)
+            {
+                e.printStackTrace();
             }
         }
-        return image;
-        */
+
+        return buffImage;
     }
 
     /*
@@ -124,23 +106,4 @@ public class MandelBrotRechnerService {
         return Color.BLACK.getRGB();
     }
     */
-
-
-    // Getter setter
-    public static int getMax_iter() {
-        return maxIter;
-    }
-
-    public static void setMaxIter(int max_iter) {
-        MandelBrotRechnerService.maxIter = max_iter;
-    }
-
-    public static double getMaxBetrag() {
-        return maxBetrag;
-    }
-
-    public static void setMaxBetrag2(double max_betrag) {
-        MandelBrotRechnerService.maxBetrag = max_betrag;
-    }
-
 }
