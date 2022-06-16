@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.swing.JFrame;
-import java.util.*;
 import java.awt.Graphics2D;
 import java.awt.Graphics;
 import javax.swing.JPanel;
@@ -14,13 +13,25 @@ import javax.swing.JPanel;
 // idefix port größer 1024 zum testen
 public class MainClient extends JPanel {
 
+
+
+    // 9.6 SEk mit 1 localhost und  8 threads pro calc
+    // 13.3 SEk mit 1 localhost und  2 threads pro calc
+    // 7.2 SEk mit 8 localhost und  2 threads pro calc
+    // 10.2 SEk mit 8 localhost und  2 threads pro calc
+    // 8.0 SEk mit 8 localhost und  8 threads pro calc
+    static double counter = 100;
+    static double startTime = 0;
     static MainClient mainClient;
     static final String[] servers = {
             "http://localhost:8080",
             "http://localhost:8080",
             "http://localhost:8080",
             "http://localhost:8080",
-          
+            "http://localhost:8080",
+            "http://localhost:8080",
+            "http://localhost:8080",
+            "http://localhost:8080",
     };
     static Thread[] threads = new Thread[servers.length];
     static ServerRequestRunner[] workers = new ServerRequestRunner[servers.length];
@@ -41,6 +52,9 @@ public class MainClient extends JPanel {
 
     public static void main(String avg[]) throws IOException
     {
+
+        startTime = System.currentTimeMillis();
+
         JFrame frame = new JFrame();
         mainClient = new MainClient(frame);
 
@@ -60,7 +74,7 @@ public class MainClient extends JPanel {
 
     public void zoomAnimation()
     {
-        while(true)
+        while(counter-- >0)
         {
             getAndDisplayImages();
 
@@ -76,6 +90,7 @@ public class MainClient extends JPanel {
                 e.printStackTrace();
             }
         }
+        System.out.println((System.currentTimeMillis() - startTime)/1000+"s \n");
     }
 
     public void getAndDisplayImages()
@@ -103,7 +118,7 @@ public class MainClient extends JPanel {
 
             double leftTopPosX = -topLeftPositionX + segmentWidthInCoordinateSystem * i + (originPositionX);
             double leftTopPosY = topLeftPositionY+(originPositionY);
-            System.out.println("origin: "+leftTopPosX+" "+leftTopPosX+" "+segmentWidthInCoordinateSystem);
+            System.out.println("counter: "+counter);
             workers[i] = new ServerRequestRunner(
                     segmentWidth,
                     height,

@@ -1,11 +1,10 @@
 package main.java.mandelbrotbeleg.mandelbrotserver;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
 public class MandelBrotRechnerService {
-    static int anzThreads = 10; //TODO variabel an übergebenes rechteck anpassen
+    static int anzThreads = 8;
 
     MandelbrotWorkerThreads[] workerThreads;
     BufferedImage buffImage;
@@ -23,7 +22,7 @@ public class MandelBrotRechnerService {
     } 
 
     // TODO: Multithreading wenn genug Pixel übergeben werden
-    // dynamische anpassung an server -> ermittlung Cors -> so viele Threads wenn sich der Overhead lohnt
+    // dynamische anpassung an server -> ermittlung Cores -> so viele Threads wenn sich der Overhead lohnt
     BufferedImage calc(int width,int height,Double scale,Double originX,Double originY){
 
         System.out.println("enter calc with "+" "+width+" "+height+" "+scale+" "+originX+" "+originY);
