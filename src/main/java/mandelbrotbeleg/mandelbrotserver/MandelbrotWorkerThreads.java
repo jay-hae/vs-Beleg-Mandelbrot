@@ -47,7 +47,7 @@ public class MandelbrotWorkerThreads implements Runnable{
         int widthSegment = (width / anzThreads);
         int diff=0;
 
-        if(currentThread == anzThreads){
+        if(currentThread == anzThreads-1){
             diff = (width-widthSegment*anzThreads);
         }
 
