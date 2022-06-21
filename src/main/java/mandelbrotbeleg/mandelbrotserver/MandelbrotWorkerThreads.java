@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 public class MandelbrotWorkerThreads implements Runnable{
 
-    static int maxIter = 1000;
+    static int maxIter = 3000;
     static double maxBetrag = 35;
 
     static final int[][] farben = {
@@ -44,12 +44,12 @@ public class MandelbrotWorkerThreads implements Runnable{
     public void run(){
         Double currentPixelX;
         Double currentPixelY;
-
         int widthSegment = (width / anzThreads);
 
         for(int i = widthSegment * currentThread; i < widthSegment * (currentThread + 1); i++){
             
             currentPixelX = this.originX + i * scale;
+            if ((i == widthSegment * currentThread) ||( i == widthSegment * (currentThread + 1) - 1)) System.out.println("curThread: "+ currentThread +", i: " + i +"currentPixelX: "+currentPixelX );
 
             for(int j=0;j<height;j++){
                 currentPixelY = this.originY - j * scale;

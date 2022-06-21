@@ -20,7 +20,7 @@ public class MainClient extends JPanel {
     // 7.2 SEk mit 8 localhost und  2 threads pro calc
     // 10.2 SEk mit 8 localhost und  2 threads pro calc
     // 8.0 SEk mit 8 localhost und  8 threads pro calc
-    static double counter = 100;
+    static double counter = 400;
     static double startTime = 0;
     static MainClient mainClient;
     static final String[] servers = {
@@ -112,6 +112,7 @@ public class MainClient extends JPanel {
         double scale = ((2.0*(double)topLeftPositionX)/(double)width);
         double segmentWidthInCoordinateSystem = (width / servers.length) * scale;
         int segmentWidth = width/servers.length;
+        System.out.println("segmentWidth: " + segmentWidth + " width / servers.length: " + (width / servers.length)  );
         
         for(int i = 0; i < servers.length; i++)
         {
@@ -119,10 +120,12 @@ public class MainClient extends JPanel {
             double leftTopPosX = -topLeftPositionX + segmentWidthInCoordinateSystem * i + (originPositionX);
             double leftTopPosY = topLeftPositionY+(originPositionY);
             System.out.println("counter: "+counter);
+            System.out.println("leftTopPosX: " +leftTopPosX );
+            System.out.println("leftTopPosY: " +leftTopPosY );
             workers[i] = new ServerRequestRunner(
                     segmentWidth,
                     height,
-                    scale, // scale
+                    scale, 
                     leftTopPosX,
                     leftTopPosY,
                     servers[i]);
