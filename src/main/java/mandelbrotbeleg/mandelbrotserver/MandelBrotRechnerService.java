@@ -4,7 +4,8 @@ import java.awt.image.BufferedImage;
 
 
 public class MandelBrotRechnerService {
-    static int anzThreads = 8;
+
+    static int anzThreads = 7;
 
     MandelbrotWorkerThreads[] workerThreads;
     BufferedImage buffImage;
@@ -25,15 +26,13 @@ public class MandelBrotRechnerService {
     // dynamische anpassung an server -> ermittlung Cores -> so viele Threads wenn sich der Overhead lohnt
     BufferedImage calc(int width,int height,Double scale,Double originX,Double originY){
 
-        System.out.println("enter calc with "+" "+width+" "+height+" "+scale+" "+originX+" "+originY);
-
         buffImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
 
         // width und height müssen auf die Threads noch auf geteilt werden
         // height wird so gelassen und width wird durch anzah an threads geteielt
 
         for(int i=0;i<anzThreads;i++){
-            
+
             workerThreads[i].updateThread(width, height, scale, originX, originY, buffImage);
 
             threads[i] = new Thread(workerThreads[i]);

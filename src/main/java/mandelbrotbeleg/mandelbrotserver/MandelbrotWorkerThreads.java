@@ -45,11 +45,15 @@ public class MandelbrotWorkerThreads implements Runnable{
         Double currentPixelX;
         Double currentPixelY;
         int widthSegment = (width / anzThreads);
+        int diff=0;
 
-        for(int i = widthSegment * currentThread; i < widthSegment * (currentThread + 1); i++){
+        if(currentThread == anzThreads){
+            diff = (width-widthSegment*anzThreads);
+        }
+
+        for(int i = widthSegment * currentThread; i < widthSegment * (currentThread + 1) + diff; i++){
             
             currentPixelX = this.originX + i * scale;
-            if ((i == widthSegment * currentThread) ||( i == widthSegment * (currentThread + 1) - 1)) System.out.println("curThread: "+ currentThread +", i: " + i +"currentPixelX: "+currentPixelX );
 
             for(int j=0;j<height;j++){
                 currentPixelY = this.originY - j * scale;

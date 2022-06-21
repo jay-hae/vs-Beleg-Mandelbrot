@@ -27,11 +27,6 @@ public class MainClient extends JPanel {
             "http://localhost:8080",
             "http://localhost:8080",
             "http://localhost:8080",
-            "http://localhost:8080",
-            "http://localhost:8080",
-            "http://localhost:8080",
-            "http://localhost:8080",
-            "http://localhost:8080",
     };
     static Thread[] threads = new Thread[servers.length];
     static ServerRequestRunner[] workers = new ServerRequestRunner[servers.length];
@@ -112,16 +107,18 @@ public class MainClient extends JPanel {
         double scale = ((2.0*(double)topLeftPositionX)/(double)width);
         double segmentWidthInCoordinateSystem = (width / servers.length) * scale;
         int segmentWidth = width/servers.length;
-        System.out.println("segmentWidth: " + segmentWidth + " width / servers.length: " + (width / servers.length)  );
         
         for(int i = 0; i < servers.length; i++)
         {
 
+
             double leftTopPosX = -topLeftPositionX + segmentWidthInCoordinateSystem * i + (originPositionX);
             double leftTopPosY = topLeftPositionY+(originPositionY);
-            System.out.println("counter: "+counter);
-            System.out.println("leftTopPosX: " +leftTopPosX );
-            System.out.println("leftTopPosY: " +leftTopPosY );
+
+            if(i == servers.length-1){
+                segmentWidth+= width-(segmentWidth*servers.length);
+            }
+
             workers[i] = new ServerRequestRunner(
                     segmentWidth,
                     height,
