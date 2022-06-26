@@ -18,6 +18,8 @@ public class MainClient extends JPanel {
     // 7.2 SEk mit 8 localhost und  2 threads pro calc
     // 10.2 SEk mit 8 localhost und  2 threads pro calc
     // 8.0 SEk mit 8 localhost und  8 threads pro calc
+    static boolean measureTime = false;
+
     static double counter = 400;
     static double startTime = 0;
     static MainClient mainClient;
@@ -79,7 +81,7 @@ public class MainClient extends JPanel {
 
     public void zoomAnimation()
     {
-        while(counter-- >0)
+        while(counter > 0)
         {
             getAndDisplayImages();
 
@@ -93,6 +95,11 @@ public class MainClient extends JPanel {
             catch(InterruptedException e)
             {
                 e.printStackTrace();
+            }
+
+            if(measureTime)
+            {
+                counter--;
             }
         }
     }
