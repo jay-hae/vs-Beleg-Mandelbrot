@@ -10,11 +10,6 @@ Jakob Häcker
 Justus Beck
 Alio Leuchtmann
 
-
-Legende: 
-- (*n) Punkte für die Verbesserungsvorschläge vorliegen  n: nummer des Verbesserungsvorschlags
-
-
 Der Client:
 
 Der Clientseitige Code unterteilt sich in 2 Klassen.
@@ -28,7 +23,7 @@ MainClient.java:
 Sie bedient sich java awt und swing um einen Ausschnitt der Mandelbrotmenge graphisch darzustellen.
 Es wird automatisch an einen Festgelegten Punkt im Bild gezoomt.
 Bei jeder änderung des Zoomfaktors wird vom Server / den Servern per Get Request an unten genannte Url ein neues Buffered Image geholt.
-Die Bilder werden bei uns nicht gebuffert und nach jedem neuen Zoom Event wird 1ms gechlaffen da ansonsten anfangs die Zeit nicht reicht das bild zu rendern bevor ein neues da ist. (*1)
+Die Bilder werden bei uns nicht gebuffert und nach jedem neuen Zoom Event wird 1ms gechlaffen da ansonsten anfangs die Zeit nicht reicht das bild zu rendern bevor ein neues da ist.
 Die eigentliche Http Get Request wird in der Klasse ServerRequestRunner ausgeführt.
 Was nur nötig ist da unser Client mehrere Server nutzen kann um die Performance zu maxmieren.
 

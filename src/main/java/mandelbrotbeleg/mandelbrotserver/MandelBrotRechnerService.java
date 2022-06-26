@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 public class MandelBrotRechnerService {
 
-    static int anzThreads = 13;
+    static int anzThreads = 8;
 
     MandelbrotWorkerThreads[] workerThreads;
     BufferedImage buffImage;
