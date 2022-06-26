@@ -18,42 +18,33 @@ public class ServerRequestRunner implements Runnable {
     final int height;
     final int width;
     final double scale;
-    final double originX;
-    final double originY;
+    final double topLeftPositionX;
+    final double topLeftPositionY;
     final String serverName;
 
     public ServerRequestRunner(
             int width,
             int height,
             double scale,
-            double originX,
-            double originY,
+            double topLeftPositionX,
+            double topLeftPositionY,
             String serverName) {
         this.height = height;
         this.width = width;
         this.scale = scale;
-        this.originX = originX;
-        this.originY = originY;
+        this.topLeftPositionX = topLeftPositionX;
+        this.topLeftPositionY = topLeftPositionY;
         this.serverName = serverName;
     }
 
     @Override
     public void run() {
 
-        image = getImageSegment(
-                width,
-                height,
-                scale,
-                originX,
-                originY,
-                serverName
-        );
+        image = getImageSegment();
 
     }
 
-    // Beispiel für Anfrage von Client
-    // TODO: anständiges error handling
-    BufferedImage getImageSegment(int width, int height, double scale, double topLeftPositionX,double topLeftPositionY,String serverName){
+    BufferedImage getImageSegment(){
 
         try{
             String url = serverName+"/calcolino";

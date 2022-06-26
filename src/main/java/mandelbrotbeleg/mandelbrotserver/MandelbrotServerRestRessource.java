@@ -26,12 +26,6 @@ public class MandelbrotServerRestRessource {
             @PathVariable Double originX,
             @PathVariable Double originY) {
 
-        System.out.println("Server got Request with:\n" +
-                "width: "+width+"\n"+
-                "height: "+height+"\n"+
-                "scale: "+scale+"\n"+
-                "originX: "+originX+"\n"+
-                "originY: "+originY+"\n");
        try{
 
            // Calc Image

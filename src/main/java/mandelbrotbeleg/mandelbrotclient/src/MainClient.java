@@ -13,8 +13,6 @@ import javax.swing.JPanel;
 // idefix port größer 1024 zum testen
 public class MainClient extends JPanel {
 
-
-
     // 9.6 SEk mit 1 localhost und  8 threads pro calc
     // 13.3 SEk mit 1 localhost und  2 threads pro calc
     // 7.2 SEk mit 8 localhost und  2 threads pro calc
