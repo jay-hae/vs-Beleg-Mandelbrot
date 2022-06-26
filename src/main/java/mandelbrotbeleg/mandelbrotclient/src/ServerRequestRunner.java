@@ -44,7 +44,9 @@ public class ServerRequestRunner implements Runnable {
 
     }
 
+    // Beispiel für Anfrage von Client
     BufferedImage getImageSegment(){
+
 
         try{
             String url = serverName+"/calcolino";
@@ -77,7 +79,7 @@ public class ServerRequestRunner implements Runnable {
             return image;
 
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             return new BufferedImage(13,13,BufferedImage.TYPE_CUSTOM); // müll
         }
 

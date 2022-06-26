@@ -95,7 +95,6 @@ public class MainClient extends JPanel {
                 e.printStackTrace();
             }
         }
-        System.out.println((System.currentTimeMillis() - startTime)/1000+"s \n");
     }
 
     public void getAndDisplayImages()
@@ -141,7 +140,6 @@ public class MainClient extends JPanel {
             threads[i].start();
 
         }
-        System.out.println("\n");
 
         for(int i = 0; i < servers.length; i++)
         {
@@ -150,7 +148,8 @@ public class MainClient extends JPanel {
                 bufferedImages[i] = workers[i].image;
 
             }catch(Exception e){
-                System.out.println("Error join !");
+                e.printStackTrace();
+                System.err.println("Error join !");
             }
         }
 

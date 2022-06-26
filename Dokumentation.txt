@@ -1,0 +1,96 @@
+Software Dokumentation
+
+Mandelbrot Beleg Projekt
+
+Programmierung Verteilter Systeme bei Professor Vogt
+
+Gruppenmitglieder:
+Niklas Werner
+Jakob Häcker 
+Justus Beck
+Alio Leuchtmann
+
+
+Legende: 
+- (*n) Punkte für die Verbesserungsvorschläge vorliegen  n: nummer des Verbesserungsvorschlags
+
+
+Der Client:
+
+Der Clientseitige Code unterteilt sich in 2 Klassen.
+
+MainClient.java und ServerRequestRunner.java
+
+
+
+MainClient.java:
+
+Sie bedient sich java awt und swing um einen Ausschnitt der Mandelbrotmenge graphisch darzustellen.
+Es wird automatisch an einen Festgelegten Punkt im Bild gezoomt.
+Bei jeder änderung des Zoomfaktors wird vom Server / den Servern per Get Request an unten genannte Url ein neues Buffered Image geholt.
+Die Bilder werden bei uns nicht gebuffert und nach jedem neuen Zoom Event wird 1ms gechlaffen da ansonsten anfangs die Zeit nicht reicht das bild zu rendern bevor ein neues da ist. (*1)
+Die eigentliche Http Get Request wird in der Klasse ServerRequestRunner ausgeführt.
+Was nur nötig ist da unser Client mehrere Server nutzen kann um die Performance zu maxmieren.
+
+Über eine for schleife werden n Threads erzeugt und mit n ServerRequestRunnern gestartet die jeweils,
+ein Segement des Buffered Images erhalten.
+Dieses Segment wird repräsentiert durch 
+width und height: (Pixelanzahl),
+scale: abstand von pixeln gemappt auf das eigentliche Koordinaten System der Mandelbrotmenge 
+topLeftPositionX/Y: um zu bestimmen wohin der erst Pixe 0/0 des Segmentes sich im Koordinaten System befindet.
+
+Mittels weiterer For Schleife und dem join Befehl wird darauf gewartet das alle Runner ihre run Methode abschließen und sich beenden.
+Nun Kann das eigentliche Bild aus den Teilsegementen zusammen gesetzt werden.
+
+Der Client wird nun in die nächste Zoom Stufe über gehen und das ganze beginnt von vorne.
+
+
+
+ServerRequestRunner.java: 
+
+Implementiert Runnable damit es in einem Thread ausgeführt werden kann.
+Ansonsten wäre der Vorteil Nutzlos mehrere Server zu haben da die get Request blockierend ist, 
+und die Berechnung der Bildsegmente sequentiell und nicht parallel wäre.
+Die einzige Aufgabe des ServerRequestRunners ist in seiner run Methode,
+die Get Request an den Server zu senden und das Resultat von String in ein Buffered Image zu konvertieren und zu speichern.
+
+
+
+Server:
+
+
+Wir haben uns für eine Restschnittstelle für die Server Client Kommunikation entschieden.
+Diese ist mithilfe von Spring Boot implementiert worden.
+
+
+// @RestController
+MandelbrotServerRestRessource.java:
+
+Ein Endpunkt:
+serverUrl/calcolino/{width}/{height}/{scale}/{originX}/{originY}
+Rückgabewert: HttpEntity<String>
+
+wobei serverUrl die IP / Domain ist unter der der Serer läuft
+
+die in {} geschachtelten Bezeichnungen sind Pfadvariablen die als Url Parameter übergeben werden.
+Die bedeutung der Parameter ist unter dem Abschnitt MainClient.java schon beschrieben.
+
+
+Bei Anfrage an diesen Endpunkt wird ein Instanz von MandelbrotRechnerServie erzeugt 
+die die eigentliche Berechnung in ihrer calc Methode ausführt und ein Buffered Image zurück gibt.
+
+Dieses BufferedImage wird dann in einen ByteArrayOutputStream geschrieben und anschließend in ein ByteArray Convertiert welches Base64 String codiert zurück gegeben wird.
+
+
+MandelBrotRechnerService.java:
+
+- verfügt über n Instanzen der MandelbrotWorkerThreads Klasse die jeweils ein Segment des an den Server übergebenen BildSegmentes bearbeiten und die Farbwerte der Pixel berechnen.
+- Das vorgehen ist analog zu der Server aufteilung im Client. Nur das diese Runnables auch die Berechnung durchführen.
+
+
+MandelbrotServerApplication.java:
+
+Spring Hauptklasse des Servers.
+Macht nichts außer die Anwendung zus starten
+
+
