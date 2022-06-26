@@ -52,7 +52,6 @@ public class ServerRequestRunner implements Runnable {
     }
 
     // Beispiel für Anfrage von Client
-    // TODO: anständiges error handling
     BufferedImage getImageSegment(int width, int height, double scale, double topLeftPositionX,double topLeftPositionY,String serverName){
 
         try{
@@ -86,7 +85,7 @@ public class ServerRequestRunner implements Runnable {
             return image;
 
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             return new BufferedImage(13,13,BufferedImage.TYPE_CUSTOM); // müll
         }
 
